@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
-
 export interface Product {
     productId: string
     name: string
@@ -51,10 +50,16 @@ export interface DashboardMetrics {
     expenseByCategorySummary: ExpenseByCategorySummary[]
 }
 
+export interface User {
+    userId: string
+    name: string
+    email: string
+}
+
 export const api = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL }),
     reducerPath: "api",
-    tagTypes: ["DashboardMetrics", "Products"],
+    tagTypes: ["DashboardMetrics", "Products", "Users", "Expenses"],
     endpoints: (build) => ({
         // 1st param is datatype receiving, 2nd param is datatype that is being sent
         // Tags help us declare when the data is stale/invalidated and needs to be refetched
@@ -74,11 +79,25 @@ export const api = createApi({
             query: (newProduct) => ({
                 url: "/products",
                 method: "POST",
-                body: newProduct
+                body: newProduct,
             }),
-            invalidatesTags: ["Products"]
-        })
+            invalidatesTags: ["Products"],
+        }),
+        getUsers: build.query<User[], void>({
+            query: () => "/users",
+            providesTags: ["Users"],
+        }),
+        getExpensesByCategory: build.query<ExpenseByCategorySummary[], void>({
+            query: () => "/expenses",
+            providesTags: ["Expenses"],
+        }),
     }),
 })
 
-export const { useGetDashboardMetricsQuery, useGetProductsQuery, useCreateProductMutation } = api
+export const {
+    useGetDashboardMetricsQuery,
+    useGetProductsQuery,
+    useCreateProductMutation,
+    useGetUsersQuery,
+    useGetExpensesByCategoryQuery,
+} = api
