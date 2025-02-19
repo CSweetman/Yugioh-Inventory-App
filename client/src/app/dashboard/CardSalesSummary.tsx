@@ -5,6 +5,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 
 const CardSalesSummary = () => {
     const { data, isLoading, isError } = useGetDashboardMetricsQuery()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const salesData = data?.salesSummary || []
 
     useEffect(() => {
